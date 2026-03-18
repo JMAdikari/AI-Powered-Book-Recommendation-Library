@@ -1,0 +1,59 @@
+# ── Python ──────────────────────────────────────────────
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Environment & Secrets ────────────────────────────────
+.env
+.env.local
+.env.*.local
+*.env
+
+# ── Flask / SQLAlchemy ───────────────────────────────────
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Flask-Migrate ────────────────────────────────────────
+# Keep migrations/ folder but ignore compiled files
+migrations/versions/__pycache__/
+
+# ── ML Cache ─────────────────────────────────────────────
+ml_cache/
+*.pkl
+
+# ── Node / React ─────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# ── Vite ─────────────────────────────────────────────────
+frontend/.vite/
+
+# ── OS ───────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── IDE ──────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── Testing ──────────────────────────────────────────────
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
