@@ -33,7 +33,7 @@ def register():
     db.session.add(user)
     db.session.commit()
 
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"access_token": access_token, "user": user.to_dict()}), 201
 
 
@@ -48,7 +48,7 @@ def login():
     if not user or not bcrypt.check_password_hash(user.password_hash, password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"access_token": access_token, "user": user.to_dict()}), 200
 
 
@@ -56,7 +56,7 @@ def login():
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required()
 def me():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user    = User.query.get(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -75,7 +75,7 @@ def logout():
 @auth_bp.route("/preferences", methods=["POST"])
 @jwt_required()
 def create_preferences():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data    = request.get_json()
 
     if UserPreference.query.filter_by(user_id=user_id).first():
@@ -96,7 +96,7 @@ def create_preferences():
 @auth_bp.route("/preferences", methods=["PUT"])
 @jwt_required()
 def update_preferences():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data    = request.get_json()
     pref    = UserPreference.query.filter_by(user_id=user_id).first()
 
@@ -119,7 +119,7 @@ def update_preferences():
 @auth_bp.route("/preferences", methods=["GET"])
 @jwt_required()
 def get_preferences():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     pref    = UserPreference.query.filter_by(user_id=user_id).first()
     if not pref:
         return jsonify({"preference": None}), 200
@@ -134,7 +134,7 @@ def get_preferences():
 @auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
 def get_profile():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user    = User.query.get(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -153,7 +153,7 @@ def get_profile():
 @auth_bp.route("/stats", methods=["GET"])
 @jwt_required()
 def get_stats():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     total_saved     = UserBook.query.filter_by(user_id=user_id).count()
     total_completed = UserBook.query.filter_by(user_id=user_id, status="completed").count()

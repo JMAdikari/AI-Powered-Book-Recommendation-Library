@@ -18,7 +18,7 @@ def create_app():
     jwt.init_app(app)
     bcrypt.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app, resources={r"/api/*": {"origins": "http://localhost:5173"}})
+    cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
 
     # Import models so Flask-Migrate can detect them
     from .models import (  # noqa: F401
