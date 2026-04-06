@@ -28,7 +28,7 @@ export default function ToastContainer({ toasts }) {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className={`px-4 py-3 rounded-lg shadow-lg text-sm font-medium
+          className={`px-4 py-3 rounded-xl shadow-2xl text-sm font-medium border border-white/10
                       transition-all duration-300 ${STYLES[t.type] || STYLES.info}`}
         >
           {t.message}

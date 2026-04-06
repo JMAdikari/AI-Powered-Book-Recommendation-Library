@@ -6,10 +6,10 @@ import EmptyState from "../components/ui/EmptyState"
 import { SkeletonCard } from "../components/ui/Skeleton"
 
 const TABS = [
-  { label: "All",       value: null },
-  { label: "Reading",   value: "reading" },
-  { label: "Completed", value: "completed" },
-  { label: "Favorites", value: "favorites" },
+  { label: "All",       value: null,        icon: "📚" },
+  { label: "Reading",   value: "reading",   icon: "📖" },
+  { label: "Completed", value: "completed", icon: "✅" },
+  { label: "Favourites",value: "favorites", icon: "❤️" },
 ]
 
 export default function Library({ showToast }) {
@@ -63,16 +63,12 @@ export default function Library({ showToast }) {
         b.id === userBookId ? { ...b, status: newStatus } : b
       ))
       showToast?.(`Marked as ${newStatus}`, "success")
-
-      // Step 24 — auto-refresh recommendations when a book is completed
       if (newStatus === "completed") {
         showToast?.("Updating your recommendations…", "info")
         try {
           await recommendationService.refresh()
           showToast?.("Recommendations updated!", "success")
-        } catch {
-          // non-critical — recs will update on next Dashboard visit
-        }
+        } catch {}
       }
     } catch {
       showToast?.("Failed to update status", "error")
@@ -80,22 +76,32 @@ export default function Library({ showToast }) {
   }
 
   return (
-    <div className="pt-20 min-h-screen bg-background px-4">
+    <div className="pt-20 min-h-screen bg-[#0A0A10] px-4">
       <div className="max-w-5xl mx-auto py-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">My Library</h1>
+        <h1 className="text-2xl font-bold text-white mb-1">My Library</h1>
+        <p className="text-sm text-gray-500 mb-6">
+          {books.length} book{books.length !== 1 ? "s" : ""} in your collection
+        </p>
 
         {/* Filter tabs */}
-        <div className="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1 w-fit">
+        <div className="flex gap-2 mb-8 flex-wrap">
           {TABS.map(t => (
             <button
               key={String(t.value)}
               onClick={() => setTab(t.value)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-medium transition
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition
+                border
                 ${tab === t.value
-                  ? "bg-white text-brand shadow-sm"
-                  : "text-gray-500 hover:text-gray-700"}`}
+                  ? "bg-brand text-white border-brand"
+                  : "bg-[#13131F] text-gray-400 border-[#1E1E30] hover:border-brand/50 hover:text-white"}`}
             >
+              <span>{t.icon}</span>
               {t.label}
+              {!loading && tab === t.value && (
+                <span className="bg-white/20 text-white text-xs px-1.5 py-0.5 rounded-full leading-none">
+                  {books.length}
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -142,14 +148,15 @@ export default function Library({ showToast }) {
 
 function LibraryCard({ userBook, onRemove, onToggleFavorite, onStatusChange }) {
   const navigate = useNavigate()
+  const [menuOpen, setMenuOpen] = useState(false)
   const { book, status, is_favorite, id } = userBook
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100
-                    hover:shadow-md transition group">
+    <div className="bg-[#13131F] rounded-xl overflow-hidden border border-[#1E1E30]
+                    hover:border-brand/30 transition-all group">
       {/* Cover */}
       <div
-        className="relative aspect-[2/3] bg-gray-100 overflow-hidden cursor-pointer"
+        className="relative aspect-[2/3] bg-[#1A1A2E] overflow-hidden cursor-pointer"
         onClick={() => navigate(`/books/${book.external_id}`)}
       >
         {book.cover_url ? (
@@ -159,44 +166,57 @@ function LibraryCard({ userBook, onRemove, onToggleFavorite, onStatusChange }) {
             className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-4xl text-gray-300">
-            📖
-          </div>
+          <div className="w-full h-full flex items-center justify-center text-4xl text-gray-700">📖</div>
         )}
 
-        {/* Hover action buttons */}
-        <div className="absolute top-2 right-2 flex flex-col gap-1.5
-                        opacity-0 group-hover:opacity-100 transition">
+        {/* Star rating */}
+        {book.rating && (
+          <span className="absolute bottom-2 left-2 flex items-center gap-1 text-xs font-semibold
+                           text-white bg-black/60 rounded-full px-2 py-0.5">
+            ⭐ {Number(book.rating).toFixed(1)}
+          </span>
+        )}
+
+        {/* Three-dot menu */}
+        <div className="absolute top-2 right-2">
           <button
-            onClick={e => { e.stopPropagation(); onToggleFavorite(id, is_favorite) }}
-            className={`w-7 h-7 bg-white rounded-full shadow flex items-center justify-center
-                        text-sm transition
-                        ${is_favorite ? "text-red-500" : "text-gray-400 hover:text-red-500"}`}
-            title={is_favorite ? "Unfavorite" : "Favorite"}
+            onClick={e => { e.stopPropagation(); setMenuOpen(v => !v) }}
+            className="w-7 h-7 bg-black/60 rounded-full flex items-center justify-center
+                       text-white text-xs hover:bg-black/80 transition"
           >
-            {is_favorite ? "♥" : "♡"}
+            ⋯
           </button>
-          <button
-            onClick={e => { e.stopPropagation(); onRemove(id) }}
-            className="w-7 h-7 bg-white rounded-full shadow flex items-center justify-center
-                       text-sm text-gray-400 hover:text-red-500 transition"
-            title="Remove from library"
-          >
-            ✕
-          </button>
+          {menuOpen && (
+            <div className="absolute right-0 top-8 w-36 bg-[#1A1A2E] border border-[#2A2A3A]
+                            rounded-xl shadow-2xl z-20 overflow-hidden">
+              <button
+                onClick={e => { e.stopPropagation(); onToggleFavorite(id, is_favorite); setMenuOpen(false) }}
+                className="w-full text-left px-3 py-2.5 text-xs text-gray-300 hover:bg-[#2A2A3A] transition"
+              >
+                {is_favorite ? "♥ Unfavourite" : "♡ Favourite"}
+              </button>
+              <button
+                onClick={e => { e.stopPropagation(); onRemove(id); setMenuOpen(false) }}
+                className="w-full text-left px-3 py-2.5 text-xs text-red-400 hover:bg-[#2A2A3A] transition"
+              >
+                ✕ Remove
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Meta + status */}
       <div className="p-2.5">
-        <p className="text-xs font-semibold text-gray-900 truncate">{book.title}</p>
-        <p className="text-xs text-gray-400 truncate mt-0.5">{book.author || "Unknown"}</p>
+        <p className="text-xs font-semibold text-white truncate">{book.title}</p>
+        <p className="text-[11px] text-gray-500 truncate mt-0.5">{book.author || "Unknown"}</p>
         <select
           value={status}
           onChange={e => onStatusChange(id, e.target.value)}
           onClick={e => e.stopPropagation()}
-          className="mt-2 w-full text-xs border border-gray-200 rounded-md px-1.5 py-1
-                     focus:outline-none focus:ring-1 focus:ring-brand bg-white cursor-pointer"
+          className="mt-2 w-full text-xs border border-[#2A2A3A] rounded-lg px-1.5 py-1.5
+                     focus:outline-none focus:ring-1 focus:ring-brand bg-[#1A1A2E]
+                     text-gray-300 cursor-pointer"
         >
           <option value="saved">Saved</option>
           <option value="reading">Reading</option>

@@ -1,89 +1,96 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { register as registerService } from "../services/authService";
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { register as registerService } from "../services/authService"
 
 export default function Register({ showToast }) {
-  const navigate = useNavigate();
-
-  const [form,    setForm]    = useState({ email: "", username: "", password: "" });
-  const [error,   setError]   = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
+  const [form,    setForm]    = useState({ email: "", username: "", password: "" })
+  const [error,   setError]   = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e) =>
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+    e.preventDefault()
+    setError("")
     if (form.password.length < 8) {
-      setError("Password must be at least 8 characters");
-      return;
+      setError("Password must be at least 8 characters")
+      return
     }
-    setLoading(true);
+    setLoading(true)
     try {
-      await registerService(form);
-      showToast?.("Account created! Please sign in.", "success");
-      navigate("/login");
+      await registerService(form)
+      showToast?.("Account created! Please sign in.", "success")
+      navigate("/login")
     } catch (err) {
-      setError(err.response?.data?.error || "Registration failed");
+      setError(err.response?.data?.error || "Registration failed")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-sm bg-white rounded-2xl shadow p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Create account</h1>
-        <p className="text-sm text-gray-500 mb-6">Join BookAI and discover your next great read</p>
+    <div className="min-h-screen flex items-center justify-center bg-[#0A0A10] px-4">
+      <div className="absolute top-1/4 right-1/3 w-72 h-72 bg-brand/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/3 left-1/4 w-56 h-56 bg-purple-900/20 rounded-full blur-3xl pointer-events-none" />
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg">
-            {error}
-          </div>
-        )}
+      <div className="relative w-full max-w-sm">
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <div className="w-9 h-9 bg-brand rounded-xl flex items-center justify-center text-white font-bold">📚</div>
+          <span className="text-xl font-bold text-white">BookAI</span>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email" name="email" value={form.email}
-              onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
-              placeholder="you@example.com"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-            <input
-              type="text" name="username" value={form.username}
-              onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
-              placeholder="bookworm42"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password" name="password" value={form.password}
-              onChange={handleChange} required
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
-              placeholder="Min. 8 characters"
-            />
-          </div>
-          <button
-            type="submit" disabled={loading}
-            className="w-full bg-brand text-white rounded-lg py-2 text-sm font-medium hover:bg-indigo-700 transition disabled:opacity-50"
-          >
-            {loading ? "Creating account…" : "Create account"}
-          </button>
-        </form>
+        <div className="bg-[#13131F] rounded-2xl border border-[#1E1E30] p-8">
+          <h1 className="text-2xl font-bold text-white mb-1">Create account</h1>
+          <p className="text-sm text-gray-500 mb-6">Join BookAI and discover your next great read</p>
 
-        <p className="mt-5 text-center text-sm text-gray-500">
-          Already have an account?{" "}
-          <Link to="/login" className="text-brand font-medium hover:underline">Sign in</Link>
-        </p>
+          {error && (
+            <div className="mb-4 p-3 bg-red-900/20 border border-red-800/40 text-red-400 text-sm rounded-xl">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {[
+              { label: "Email",    name: "email",    type: "email",    placeholder: "you@example.com" },
+              { label: "Username", name: "username", type: "text",     placeholder: "bookworm42" },
+              { label: "Password", name: "password", type: "password", placeholder: "Min. 8 characters" },
+            ].map(f => (
+              <div key={f.name}>
+                <label className="block text-xs font-medium text-gray-500 mb-1.5">{f.label}</label>
+                <input
+                  type={f.type}
+                  name={f.name}
+                  value={form[f.name]}
+                  onChange={handleChange}
+                  placeholder={f.placeholder}
+                  required
+                  className="w-full border border-[#2A2A3A] rounded-xl px-4 py-2.5 text-sm
+                             bg-[#0D0D16] text-white placeholder-gray-600
+                             focus:outline-none focus:ring-2 focus:ring-brand transition"
+                />
+              </div>
+            ))}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-brand text-white rounded-xl py-2.5 text-sm font-semibold
+                         hover:bg-indigo-500 transition disabled:opacity-50 mt-2"
+            >
+              {loading ? "Creating account…" : "Create Account"}
+            </button>
+          </form>
+
+          <p className="mt-5 text-center text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link to="/login" className="text-brand font-medium hover:text-indigo-400 transition">
+              Sign in
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
-  );
+  )
 }

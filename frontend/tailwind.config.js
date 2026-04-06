@@ -4,10 +4,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand:       "#4F46E5",
+        brand:       "#6C5CE7",
         achievement: "#F59E0B",
-        background:  "#FAFAF8",
-        reading:     "#F5F0E8",
+        background:  "#0A0A10",
+        reading:     "#13131F",
+        surface:     "#13131F",
+        "surface-2": "#1A1A2E",
+        "border-dark": "#1E1E30",
       },
       fontFamily: {
         serif: ["Georgia", "serif"],
