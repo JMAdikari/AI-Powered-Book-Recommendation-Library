@@ -122,10 +122,10 @@ export default function Profile({ showToast }) {
   }
 
   const STAT_CARDS = stats ? [
-    { label: "Books Saved",       value: stats.total_saved,     border: "border-b-brand",      icon: "📚", iconBg: "bg-brand/20",      iconColor: "text-brand" },
-    { label: "Completed",         value: stats.total_completed, border: "border-b-green-600",  icon: "✅", iconBg: "bg-green-900/30",  iconColor: "text-green-400" },
-    { label: "Favourites",        value: stats.total_favorites, border: "border-b-red-500",    icon: "❤️", iconBg: "bg-red-900/30",    iconColor: "text-red-400" },
-    { label: "Pages This Week",   value: stats.pages_this_week, border: "border-b-blue-500",   icon: "📄", iconBg: "bg-blue-900/30",   iconColor: "text-blue-400" },
+    { label: "Books Saved",     value: stats.total_saved,     border: "border-b-brand",     color: "text-brand" },
+    { label: "Completed",       value: stats.total_completed, border: "border-b-green-700", color: "text-green-400" },
+    { label: "Favourites",      value: stats.total_favorites, border: "border-b-red-700",   color: "text-red-400" },
+    { label: "Pages This Week", value: stats.pages_this_week, border: "border-b-blue-700",  color: "text-blue-400" },
   ] : []
 
   return (
@@ -134,13 +134,12 @@ export default function Profile({ showToast }) {
 
         {/* ── Hero card ─────────────────────────────────────────── */}
         <div className="bg-[#13131F] rounded-2xl border border-[#1E1E30] overflow-hidden">
-          {/* Gradient top bar */}
-          <div className="h-1.5 w-full bg-gradient-to-r from-brand via-purple-400 to-cyan-400" />
+          <div className="h-1 w-full bg-brand" />
           <div className="p-6 flex items-center gap-5">
             {/* Avatar with online dot */}
             <div className="relative flex-shrink-0">
               <div className="w-16 h-16 rounded-full bg-brand text-white text-2xl font-bold
-                              flex items-center justify-center shadow-lg shadow-brand/20">
+                              flex items-center justify-center">
                 {user?.username?.slice(0, 2).toUpperCase() || "?"}
               </div>
               <span className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full
@@ -153,9 +152,9 @@ export default function Profile({ showToast }) {
                 <span className={`mt-2 inline-flex items-center gap-1.5 text-xs font-semibold
                                  px-2.5 py-1 rounded-full border
                                  ${stats.streak_days > 0
-                                   ? "bg-amber-900/30 text-amber-400 border-amber-800/40"
+                                   ? "bg-amber-900 text-amber-200 border-amber-800"
                                    : "bg-[#1A1A2E] text-gray-500 border-[#2A2A3A]"}`}>
-                  🔥 {stats.streak_days > 0 ? `${stats.streak_days}-day streak` : "No streak yet"}
+                  {stats.streak_days > 0 ? `${stats.streak_days}-day streak` : "No streak yet"}
                 </span>
               )}
             </div>
@@ -163,12 +162,12 @@ export default function Profile({ showToast }) {
               <Link to="/library"
                     className="flex items-center gap-1.5 text-xs px-3 py-2 bg-brand text-white
                                rounded-xl hover:bg-indigo-500 transition font-medium">
-                📚 My Library
+                My Library
               </Link>
               <Link to="/dashboard"
                     className="flex items-center gap-1.5 text-xs px-3 py-2 bg-[#1A1A2E] text-gray-300
                                rounded-xl hover:bg-[#2A2A3A] transition border border-[#2A2A3A]">
-                ↗ Dashboard
+                Dashboard
               </Link>
             </div>
           </div>
@@ -178,18 +177,14 @@ export default function Profile({ showToast }) {
         {stats && (
           <div className="bg-[#13131F] rounded-2xl border border-[#1E1E30] p-6">
             <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-              ↗ Reading Statistics
+              Reading Statistics
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-5">
               {STAT_CARDS.map(s => (
                 <div key={s.label}
                      className={`bg-[#0D0D16] rounded-xl p-4 text-center border-b-2 border-x-0
                                  border-t-0 border border-[#1E1E30] ${s.border}`}>
-                  <div className={`w-10 h-10 ${s.iconBg} rounded-xl flex items-center justify-center
-                                   text-lg mx-auto mb-2`}>
-                    {s.icon}
-                  </div>
-                  <p className="text-2xl font-bold text-white">{s.value}</p>
+                    <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
                   <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">{s.label}</p>
                 </div>
               ))}
@@ -198,7 +193,7 @@ export default function Profile({ showToast }) {
             {/* 7-day activity */}
             <div>
               <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-3 flex items-center gap-1.5">
-                📅 LAST 7 DAYS
+                LAST 7 DAYS
               </p>
               <div className="flex gap-2">
                 {Object.entries(stats.daily_activity).map(([date, active]) => {
@@ -206,7 +201,7 @@ export default function Profile({ showToast }) {
                   return (
                     <div key={date} className="flex-1 flex flex-col items-center gap-1.5">
                       <div className={`w-full rounded-xl h-12 transition-all ${
-                        active ? "bg-brand shadow-lg shadow-brand/20" : "bg-[#1A1A2E]"}`}
+                        active ? "bg-brand" : "bg-[#1A1A2E]"}`}
                         title={date}
                       />
                       <span className="text-[9px] text-gray-600">{label}</span>
@@ -366,8 +361,8 @@ export default function Profile({ showToast }) {
                 <div className="flex flex-wrap gap-2 mb-3">
                   {prefs.genres.map(g => (
                     <span key={g}
-                          className="px-3 py-1 bg-[#1A1A3A] text-brand text-xs font-medium
-                                     rounded-full border border-brand/20">
+                          className="px-3 py-1 bg-[#1E1E35] text-gray-300 text-xs font-medium
+                                     rounded-full border border-[#2A2A4A]">
                       {g}
                     </span>
                   ))}

@@ -67,9 +67,9 @@ export default function Dashboard() {
   }
 
   const STAT_CARDS = stats ? [
-    { label: "Books Saved", value: stats.total_saved,     iconBg: "bg-brand",      icon: "📚" },
-    { label: "Completed",   value: stats.total_completed, iconBg: "bg-green-600",   icon: "✅" },
-    { label: "Favourites",  value: stats.total_favorites, iconBg: "bg-red-600",     icon: "❤️" },
+    { label: "Books Saved", value: stats.total_saved,     color: "text-brand",      dot: "bg-[#1E1E35]" },
+    { label: "Completed",   value: stats.total_completed, color: "text-green-400",  dot: "bg-green-900" },
+    { label: "Favourites",  value: stats.total_favorites, color: "text-red-400",    dot: "bg-red-900" },
   ] : []
 
   return (
@@ -80,7 +80,7 @@ export default function Dashboard() {
         <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
           <div>
             <h1 className="text-2xl font-bold text-white">
-              Hello, {user?.username} 👋
+              Hello, {user?.username}
             </h1>
             <p className="text-sm text-gray-500 mt-1">{sourceLabel}</p>
           </div>
@@ -94,15 +94,15 @@ export default function Dashboard() {
             {refreshing
               ? <><span className="w-3.5 h-3.5 border-2 border-white border-t-transparent
                                   rounded-full animate-spin" />Refreshing…</>
-              : <>↻ Refresh</>}
+              : <>Refresh</>}
           </button>
         </div>
 
         {/* AI badge */}
         <div className="mb-6">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#1A1A2E] border border-[#2A2A4A]
-                           text-brand text-xs font-semibold rounded-full">
-            ⚡ AI-powered · TF-IDF + Cosine Similarity
+                           text-gray-400 text-xs font-semibold rounded-full">
+            ⚡&nbsp;AI-powered · TF-IDF + Cosine Similarity
           </span>
         </div>
 
@@ -114,8 +114,8 @@ export default function Dashboard() {
               {/* Streak card */}
               <div className="rounded-2xl p-5 bg-[#13131F] border border-[#1E1E30] flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0
-                                ${stats.streak_days > 0 ? "bg-amber-900/40" : "bg-[#1A1A2E]"}`}>
-                  {stats.streak_days > 0 ? "🔥" : "📖"}
+                                ${stats.streak_days > 0 ? "bg-amber-900" : "bg-[#1A1A2E]"}`}>
+                  {stats.streak_days > 0 ? "🔥" : ""}
                 </div>
                 <div>
                   <p className={`text-lg font-bold ${stats.streak_days > 0 ? "text-amber-400" : "text-gray-400"}`}>
@@ -128,7 +128,7 @@ export default function Dashboard() {
               {/* Weekly card */}
               <div className="rounded-2xl p-5 bg-[#13131F] border border-[#1E1E30]">
                 <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-3 flex items-center gap-1">
-                  ↗ THIS WEEK
+                  THIS WEEK
                 </p>
                 <div className="flex gap-6 mb-4">
                   <div>
@@ -162,13 +162,8 @@ export default function Dashboard() {
               {STAT_CARDS.map(item => (
                 <div key={item.label}
                      className="flex-1 min-w-[100px] bg-[#13131F] rounded-2xl border border-[#1E1E30]
-                                px-5 py-5 relative overflow-hidden">
-                  {/* Background blob */}
-                  <div className={`absolute -bottom-4 -right-4 w-16 h-16 rounded-full opacity-20 ${item.iconBg}`} />
-                  <div className={`w-9 h-9 ${item.iconBg} rounded-xl flex items-center justify-center text-base mb-3`}>
-                    {item.icon}
-                  </div>
-                  <p className="text-2xl font-bold text-white">{item.value}</p>
+                                px-5 py-5">
+                  <p className={`text-2xl font-bold ${item.color}`}>{item.value}</p>
                   <p className="text-xs text-gray-500 mt-0.5">{item.label}</p>
                 </div>
               ))}
@@ -178,7 +173,7 @@ export default function Dashboard() {
 
         {/* Error */}
         {error && (
-          <div className="mb-6 p-4 bg-red-900/20 border border-red-900/40 text-red-400
+          <div className="mb-6 p-4 bg-red-950 border border-red-900 text-red-400
                           text-sm rounded-xl flex items-center justify-between">
             {error}
             <button onClick={fetchRecs} className="underline ml-4 hover:text-red-300">Retry</button>
@@ -205,7 +200,7 @@ export default function Dashboard() {
         {!loading && !error && recs.length === 0 && (
           <div className="bg-[#13131F] rounded-2xl border border-dashed border-[#2A2A3A]
                           p-12 text-center">
-            <div className="text-5xl mb-4">🤖</div>
+            <div className="w-12 h-12 bg-[#1E1E35] rounded-xl mx-auto mb-4" />
             <p className="font-semibold text-white text-lg mb-1">No recommendations yet</p>
             <p className="text-sm text-gray-500 mb-6">
               Set your reading preferences so the AI knows what to recommend

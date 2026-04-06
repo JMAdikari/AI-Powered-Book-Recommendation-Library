@@ -3,16 +3,16 @@ import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 
 const BADGE = {
-  full:    { label: "Free", cls: "bg-green-600 text-white" },
-  buy:     { label: "Buy",  cls: "bg-amber-600 text-white" },
-  preview: { label: "Buy",  cls: "bg-amber-600 text-white" },
+  full:    { label: "Free",        cls: "bg-green-600 text-white" },
+  buy:     { label: "Buy",         cls: "bg-amber-600 text-white" },
+  preview: { label: "Buy",         cls: "bg-amber-600 text-white" },
   none:    { label: "Unavailable", cls: "bg-gray-600 text-gray-200" },
 }
 
 const ACTION = {
-  full:    { label: "Read Now",    cls: "bg-[#1A2A1A] text-green-400 hover:bg-green-800/40",  icon: "📖" },
-  buy:     { label: "Find to Buy", cls: "bg-[#2A2010] text-amber-400 hover:bg-amber-800/30", icon: "🛒" },
-  preview: { label: "Find to Buy", cls: "bg-[#2A2010] text-amber-400 hover:bg-amber-800/30", icon: "🛒" },
+  full:    { label: "Read Now",    cls: "bg-green-800 text-green-100 hover:bg-green-700" },
+  buy:     { label: "Find to Buy", cls: "bg-amber-800 text-amber-100 hover:bg-amber-700" },
+  preview: { label: "Find to Buy", cls: "bg-amber-800 text-amber-100 hover:bg-amber-700" },
 }
 
 export default function BookCard({ book, onSave, onFavorite }) {
@@ -47,73 +47,61 @@ export default function BookCard({ book, onSave, onFavorite }) {
 
   return (
     <div className="bg-[#13131F] rounded-xl overflow-hidden border border-[#1E1E30]
-                    hover:border-brand/40 transition-all flex flex-col group">
-      {/* Cover */}
-      <Link to={`/books/${book.external_id}`} className="block relative aspect-[2/3] bg-[#1A1A2E] overflow-hidden flex-shrink-0">
-        {book.cover_url ? (
-          <img
-            src={book.cover_url}
-            alt={book.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-700 text-4xl">📖</div>
-        )}
+                    hover:border-[#3A3A5A] transition-all flex flex-col group">
 
-        {/* Content type badge — top left */}
+      {/* Cover */}
+      <Link to={`/books/${book.external_id}`}
+            className="block relative aspect-[2/3] bg-[#1A1A2E] overflow-hidden flex-shrink-0">
+        {book.cover_url
+          ? <img src={book.cover_url} alt={book.title}
+                 className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+          : <div className="w-full h-full flex items-center justify-center text-gray-700 text-sm">No cover</div>
+        }
+
+        {/* Content type badge */}
         <span className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${badge.cls}`}>
           {badge.label}
         </span>
 
-        {/* Star rating — bottom left */}
+        {/* Star rating */}
         {book.rating && (
-          <span className="absolute bottom-2 left-2 flex items-center gap-1 text-xs font-semibold
-                           text-white bg-black/60 rounded-full px-2 py-0.5">
-            ⭐ {Number(book.rating).toFixed(1)}
+          <span className="absolute bottom-2 left-2 flex items-center gap-1 text-[10px] font-semibold
+                           text-white bg-[#0A0A10] rounded-full px-2 py-0.5">
+            ★ {Number(book.rating).toFixed(1)}
           </span>
         )}
 
         {/* Save / Fav buttons */}
         <div className="absolute top-2 right-2 flex flex-col gap-1.5" ref={promptRef}>
-          <button
-            onClick={handleSave}
-            className="w-7 h-7 bg-black/50 hover:bg-brand rounded-full flex items-center
-                       justify-center text-xs text-white transition-colors"
-            title={isAuthenticated ? "Save to Library" : "Sign up to save books"}
-          >
+          <button onClick={handleSave}
+                  className="w-7 h-7 bg-[#1A1A2A] hover:bg-brand rounded-full flex items-center
+                             justify-center text-xs text-white transition-colors"
+                  title={isAuthenticated ? "Save to Library" : "Sign up to save"}>
             🔖
           </button>
-          <button
-            onClick={handleFavorite}
-            className="w-7 h-7 bg-black/50 hover:bg-red-600 rounded-full flex items-center
-                       justify-center text-xs text-white transition-colors"
-            title={isAuthenticated ? "Add to Favourites" : "Sign up to favourite books"}
-          >
+          <button onClick={handleFavorite}
+                  className="w-7 h-7 bg-[#1A1A2A] hover:bg-red-700 rounded-full flex items-center
+                             justify-center text-xs text-white transition-colors"
+                  title={isAuthenticated ? "Add to Favourites" : "Sign up to favourite"}>
             ♡
           </button>
 
-          {/* Auth prompt bubble */}
+          {/* Auth prompt */}
           {prompt && (
-            <div
-              onClick={e => e.preventDefault()}
-              className="absolute right-9 top-0 w-44 bg-gray-900 border border-[#2A2A3A] text-white
-                         text-xs rounded-xl shadow-2xl p-3 z-50 animate-fade-in"
-            >
+            <div onClick={e => e.preventDefault()}
+                 className="absolute right-9 top-0 w-44 bg-[#1A1A2A] border border-[#2A2A3A] text-white
+                            text-xs rounded-xl p-3 z-50 animate-fade-in">
               <p className="font-semibold mb-1 leading-snug">
                 {prompt === "save" ? "Save books to your library" : "Favourite books you love"}
               </p>
               <p className="text-gray-500 mb-2 leading-snug">Create a free account to get started.</p>
-              <button
-                onClick={e => { e.preventDefault(); navigate("/register") }}
-                className="w-full py-1.5 bg-brand text-white rounded-lg font-semibold
-                           hover:bg-indigo-500 transition text-xs"
-              >
+              <button onClick={e => { e.preventDefault(); navigate("/register") }}
+                      className="w-full py-1.5 bg-brand text-white rounded-lg font-semibold
+                                 hover:bg-indigo-500 transition text-xs">
                 Create account
               </button>
-              <button
-                onClick={e => { e.preventDefault(); navigate("/login") }}
-                className="w-full py-1 text-gray-500 hover:text-white transition text-xs mt-1"
-              >
+              <button onClick={e => { e.preventDefault(); navigate("/login") }}
+                      className="w-full py-1 text-gray-500 hover:text-white transition text-xs mt-1">
                 Already have one? Log in
               </button>
             </div>
@@ -124,7 +112,7 @@ export default function BookCard({ book, onSave, onFavorite }) {
       {/* Meta */}
       <div className="p-3 flex flex-col flex-1">
         <Link to={`/books/${book.external_id}`}>
-          <p className="text-xs font-semibold text-white truncate leading-tight hover:text-brand transition-colors">
+          <p className="text-xs font-semibold text-white truncate leading-tight hover:text-gray-300 transition-colors">
             {book.title}
           </p>
         </Link>
@@ -132,20 +120,16 @@ export default function BookCard({ book, onSave, onFavorite }) {
           {book.author || "Unknown author"}
         </p>
 
-        {/* Genre + action row */}
-        <div className="mt-2 flex items-center gap-1.5 flex-wrap">
-          {(book.genres || []).length > 0 && (
-            <span className="px-2 py-0.5 bg-[#1A1A3A] text-brand text-[10px] font-medium rounded-full truncate max-w-[80px]">
-              {book.genres[0]}
-            </span>
-          )}
+        {/* Genre left · Action right — pinned to bottom */}
+        <div className="mt-auto pt-2 flex items-center justify-between gap-1">
+          <span className="px-2 py-0.5 bg-[#1E1E2A] text-gray-400 text-[10px] font-medium
+                           rounded-md truncate max-w-[80px] flex-shrink-0">
+            {(book.genres || [])[0] || ""}
+          </span>
           {action && (
-            <Link
-              to={`/books/${book.external_id}`}
-              className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold
-                          transition-colors ${action.cls}`}
-            >
-              <span>{action.icon}</span>
+            <Link to={`/books/${book.external_id}`}
+                  className={`flex-shrink-0 px-2 py-0.5 rounded-md text-[10px] font-semibold
+                              transition-colors whitespace-nowrap ${action.cls}`}>
               {action.label}
             </Link>
           )}

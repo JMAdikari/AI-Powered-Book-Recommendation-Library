@@ -28,14 +28,10 @@ export default function Login({ showToast }) {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0A0A10] px-4">
-      {/* Glow blobs */}
-      <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-brand/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/3 w-56 h-56 bg-purple-900/20 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="relative w-full max-w-md">
+      <div className="w-full max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-9 h-9 bg-brand rounded-xl flex items-center justify-center text-white font-bold">📚</div>
+          <div className="w-9 h-9 bg-brand rounded-xl flex items-center justify-center text-white text-sm font-bold">B</div>
           <span className="text-xl font-bold text-white">BookAI</span>
         </div>
 
@@ -44,7 +40,7 @@ export default function Login({ showToast }) {
           <p className="text-sm text-gray-500 mb-6">Sign in to your BookAI account</p>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-900/20 border border-red-800/40 text-red-400 text-sm rounded-xl">
+            <div className="mb-4 p-3 bg-red-950 border border-red-900 text-red-400 text-sm rounded-xl">
               {error}
             </div>
           )}

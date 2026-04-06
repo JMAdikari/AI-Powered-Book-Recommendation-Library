@@ -6,10 +6,10 @@ import EmptyState from "../components/ui/EmptyState"
 import { SkeletonCard } from "../components/ui/Skeleton"
 
 const TABS = [
-  { label: "All",       value: null,        icon: "📚" },
-  { label: "Reading",   value: "reading",   icon: "📖" },
-  { label: "Completed", value: "completed", icon: "✅" },
-  { label: "Favourites",value: "favorites", icon: "❤️" },
+  { label: "All",       value: null,        icon: "◻" },
+  { label: "Reading",   value: "reading",   icon: "◔" },
+  { label: "Completed", value: "completed", icon: "✓" },
+  { label: "Favourites",value: "favorites", icon: "♡" },
 ]
 
 export default function Library({ showToast }) {
@@ -93,12 +93,12 @@ export default function Library({ showToast }) {
                 border
                 ${tab === t.value
                   ? "bg-brand text-white border-brand"
-                  : "bg-[#13131F] text-gray-400 border-[#1E1E30] hover:border-brand/50 hover:text-white"}`}
+                  : "bg-[#13131F] text-gray-400 border-[#1E1E30] hover:border-[#3A3A5A] hover:text-white"}`}
             >
-              <span>{t.icon}</span>
+              <span className="text-base leading-none">{t.icon}</span>
               {t.label}
               {!loading && tab === t.value && (
-                <span className="bg-white/20 text-white text-xs px-1.5 py-0.5 rounded-full leading-none">
+                <span className="bg-[#2A2A4A] text-white text-xs px-1.5 py-0.5 rounded-full leading-none">
                   {books.length}
                 </span>
               )}
@@ -153,7 +153,7 @@ function LibraryCard({ userBook, onRemove, onToggleFavorite, onStatusChange }) {
 
   return (
     <div className="bg-[#13131F] rounded-xl overflow-hidden border border-[#1E1E30]
-                    hover:border-brand/30 transition-all group">
+                    hover:border-[#3A3A5A] transition-all group">
       {/* Cover */}
       <div
         className="relative aspect-[2/3] bg-[#1A1A2E] overflow-hidden cursor-pointer"
@@ -193,13 +193,13 @@ function LibraryCard({ userBook, onRemove, onToggleFavorite, onStatusChange }) {
                 onClick={e => { e.stopPropagation(); onToggleFavorite(id, is_favorite); setMenuOpen(false) }}
                 className="w-full text-left px-3 py-2.5 text-xs text-gray-300 hover:bg-[#2A2A3A] transition"
               >
-                {is_favorite ? "♥ Unfavourite" : "♡ Favourite"}
+                {is_favorite ? "Unfavourite" : "Favourite"}
               </button>
               <button
                 onClick={e => { e.stopPropagation(); onRemove(id); setMenuOpen(false) }}
                 className="w-full text-left px-3 py-2.5 text-xs text-red-400 hover:bg-[#2A2A3A] transition"
               >
-                ✕ Remove
+                Remove
               </button>
             </div>
           )}

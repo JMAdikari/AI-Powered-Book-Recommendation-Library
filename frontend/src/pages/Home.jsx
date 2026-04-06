@@ -7,28 +7,28 @@ import { libraryService } from "../services/libraryService"
 
 const FEATURES = [
   {
-    icon: "🤖",
+    label: "AI",
     title: "AI Recommendations",
     desc: "Personalised picks powered by TF-IDF + cosine similarity — the more you read, the smarter it gets.",
-    iconBg: "bg-brand/20", iconColor: "text-brand",
+    iconBg: "bg-[#1E1E35]", labelColor: "text-brand",
   },
   {
-    icon: "📖",
+    label: "Read",
     title: "Free Full-Text Reads",
     desc: "Read thousands of classic books directly in-browser with a clean, distraction-free reader.",
-    iconBg: "bg-green-900/30", iconColor: "text-green-400",
+    iconBg: "bg-green-900", labelColor: "text-green-300",
   },
   {
-    icon: "📚",
+    label: "Lib",
     title: "Personal Library",
     desc: "Save, track reading status, and favourite books — your collection always in sync.",
-    iconBg: "bg-amber-900/30", iconColor: "text-amber-400",
+    iconBg: "bg-amber-900", labelColor: "text-amber-300",
   },
   {
-    icon: "🔥",
+    label: "Streak",
     title: "Reading Streaks",
     desc: "Build daily reading habits. Track your streak and weekly progress on the dashboard.",
-    iconBg: "bg-red-900/30", iconColor: "text-red-400",
+    iconBg: "bg-red-900", labelColor: "text-red-300",
   },
 ]
 
@@ -59,15 +59,10 @@ export default function Home() {
     <div className="pt-16 min-h-screen bg-[#0A0A10]">
 
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-brand/10 rounded-full
-                        blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -right-16 w-72 h-72 bg-purple-900/20 rounded-full
-                        blur-3xl pointer-events-none" />
-
-        <div className="relative max-w-3xl mx-auto text-center px-4 py-20 md:py-28">
+      <section>
+        <div className="max-w-3xl mx-auto text-center px-4 py-20 md:py-28">
           <span className="inline-block mb-4 px-4 py-1.5 bg-[#1A1A2E] text-brand text-xs font-semibold
-                           rounded-full border border-brand/20 tracking-wide">
+                           rounded-full border border-[#2A2A4A] tracking-wide">
             ✨ AI-Powered · Free to Use
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-5 leading-tight">
@@ -82,7 +77,7 @@ export default function Home() {
             <button
               onClick={() => navigate("/search")}
               className="px-7 py-3 bg-brand text-white rounded-xl font-semibold
-                         hover:bg-indigo-500 transition shadow-lg shadow-brand/20"
+                         hover:bg-indigo-500 transition"
             >
               Browse Books
             </button>
@@ -90,7 +85,7 @@ export default function Home() {
               <button
                 onClick={() => navigate("/register")}
                 className="px-7 py-3 border border-[#2A2A3A] text-gray-300 rounded-xl
-                           font-semibold hover:bg-[#1A1A2E] hover:border-brand/40 transition"
+                           font-semibold hover:bg-[#1A1A2E] hover:border-[#3A3A5A] transition"
               >
                 Get AI Recommendations
               </button>
@@ -98,7 +93,7 @@ export default function Home() {
               <button
                 onClick={() => navigate("/dashboard")}
                 className="px-7 py-3 border border-[#2A2A3A] text-gray-300 rounded-xl
-                           font-semibold hover:bg-[#1A1A2E] hover:border-brand/40 transition"
+                           font-semibold hover:bg-[#1A1A2E] hover:border-[#3A3A5A] transition"
               >
                 My Dashboard →
               </button>
@@ -113,10 +108,10 @@ export default function Home() {
           {FEATURES.map(f => (
             <div key={f.title}
                  className="bg-[#13131F] rounded-2xl p-5 border border-[#1E1E30]
-                            hover:border-brand/30 transition">
-              <div className={`w-12 h-12 ${f.iconBg} rounded-2xl flex items-center justify-center
-                               text-2xl mb-3`}>
-                {f.icon}
+                            hover:border-[#3A3A5A] transition">
+              <div className={`w-12 h-12 ${f.iconBg} rounded-xl flex items-center justify-center
+                               text-xs font-bold mb-3 ${f.labelColor}`}>
+                {f.label}
               </div>
               <h3 className="font-semibold text-white mb-1 text-sm">{f.title}</h3>
               <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>
@@ -168,7 +163,7 @@ export default function Home() {
       {/* ── CTA banner ───────────────────────────────────────────────── */}
       {!isAuthenticated && (
         <section className="max-w-5xl mx-auto px-4 pb-20">
-          <div className="bg-gradient-to-r from-brand to-purple-500 rounded-2xl p-8 text-center">
+          <div className="bg-brand rounded-2xl p-8 text-center">
             <h2 className="text-2xl font-bold text-white mb-2">Ready for your personalised list?</h2>
             <p className="text-indigo-200 text-sm mb-6">
               Create a free account and let the AI learn what you love.

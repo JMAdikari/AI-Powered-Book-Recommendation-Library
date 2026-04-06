@@ -106,7 +106,7 @@ export default function Search({ showToast }) {
         {/* Hero */}
         <div className="py-10 text-center">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#1A1A2E] border border-[#2A2A4A]
-                           text-brand text-xs font-semibold rounded-full mb-5">
+                           text-gray-400 text-xs font-semibold rounded-full mb-5">
             <span>⚡</span> AI-powered · TF-IDF + Cosine Similarity
           </span>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
@@ -117,7 +117,7 @@ export default function Search({ showToast }) {
           {/* Search input */}
           <form onSubmit={handleSubmit} className="max-w-xl mx-auto">
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">🔍</span>
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm">&#x2315;</span>
               <input
                 type="text"
                 value={query}
@@ -171,7 +171,7 @@ export default function Search({ showToast }) {
 
         {/* Error */}
         {error && (
-          <p className="text-red-400 text-sm mb-4 text-center bg-red-900/20 border border-red-900/40
+          <p className="text-red-400 text-sm mb-4 text-center bg-red-950 border border-red-900
                         rounded-xl py-3">{error}</p>
         )}
 
@@ -193,7 +193,7 @@ export default function Search({ showToast }) {
         {/* Empty filtered state */}
         {!loading && !error && books.length === 0 && allBooks.length > 0 && (
           <div className="text-center py-16 text-gray-500">
-            <div className="text-4xl mb-3">🔎</div>
+            <div className="w-10 h-10 bg-[#1E1E2A] rounded-xl mx-auto mb-3" />
             <p className="font-medium text-gray-300">
               No {filter === "full" ? "free-to-read" : filter === "buy" ? "buyable" : "unavailable"} books in these results
             </p>
@@ -206,7 +206,7 @@ export default function Search({ showToast }) {
         {/* No results */}
         {!loading && !error && allBooks.length === 0 && (
           <div className="text-center py-20 text-gray-500">
-            <div className="text-5xl mb-4">📭</div>
+            <div className="w-10 h-10 bg-[#1E1E2A] rounded-xl mx-auto mb-4" />
             <p className="font-medium text-lg text-gray-300">No books found for "{query}"</p>
             <p className="text-sm mt-1">Try a different title or author name</p>
           </div>

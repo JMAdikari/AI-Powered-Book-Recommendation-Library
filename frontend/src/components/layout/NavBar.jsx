@@ -40,21 +40,21 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 h-16 bg-[#0A0A10]/95 backdrop-blur
+      <nav className="fixed top-0 left-0 right-0 h-16 bg-[#0A0A10]
                       border-b border-[#1E1E30] z-40 px-4">
         <div className="max-w-6xl mx-auto h-full flex items-center gap-4">
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 flex-shrink-0 mr-2">
             <div className="w-8 h-8 bg-brand rounded-lg flex items-center justify-center text-white text-sm font-bold">
-              📚
+              B
             </div>
             <span className="text-lg font-bold text-white">BookAI</span>
           </Link>
 
           {/* Desktop search */}
           <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-sm items-center relative">
-            <span className="absolute left-3 text-gray-500 text-sm">🔍</span>
+            <span className="absolute left-3 text-gray-500 text-sm">&#x2315;</span>
             <input
               type="text"
               value={searchQuery}
@@ -129,7 +129,7 @@ export default function NavBar() {
           <div className="flex md:hidden items-center gap-2 ml-auto">
             <button onClick={() => setShowSearch(v => !v)}
                     className="p-2 text-gray-500 hover:text-white transition" aria-label="Search">
-              🔍
+              &#x2315;
             </button>
             <button onClick={() => setMenuOpen(v => !v)}
                     className="p-2 text-gray-500 hover:text-white transition" aria-label="Menu">
