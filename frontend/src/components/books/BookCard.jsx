@@ -46,68 +46,75 @@ export default function BookCard({ book, onSave, onFavorite }) {
   }
 
   return (
-    <div className="bg-[#13131F] rounded-xl overflow-hidden border border-[#1E1E30]
-                    hover:border-[#3A3A5A] transition-all flex flex-col group">
+    // No overflow-hidden on the outer card — lets the popup escape
+    <div className="bg-[#13131F] rounded-xl border border-[#1E1E30]
+                    hover:border-[#3A3A5A] transition-all flex flex-col group relative">
 
-      {/* Cover */}
+      {/* Cover — has its own overflow-hidden + rounded top */}
       <Link to={`/books/${book.external_id}`}
-            className="block relative aspect-[2/3] bg-[#1A1A2E] overflow-hidden flex-shrink-0">
+            className="block relative aspect-[2/3] bg-[#1A1A2E] overflow-hidden
+                       rounded-t-xl flex-shrink-0">
         {book.cover_url
           ? <img src={book.cover_url} alt={book.title}
                  className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
           : <div className="w-full h-full flex items-center justify-center text-gray-700 text-sm">No cover</div>
         }
 
-        {/* Content type badge */}
+        {/* Content badge — top left */}
         <span className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${badge.cls}`}>
           {badge.label}
         </span>
 
-        {/* Star rating */}
+        {/* Star rating — bottom left */}
         {book.rating && (
           <span className="absolute bottom-2 left-2 flex items-center gap-1 text-[10px] font-semibold
                            text-white bg-[#0A0A10] rounded-full px-2 py-0.5">
             ★ {Number(book.rating).toFixed(1)}
           </span>
         )}
-
-        {/* Save / Fav buttons */}
-        <div className="absolute top-2 right-2 flex flex-col gap-1.5" ref={promptRef}>
-          <button onClick={handleSave}
-                  className="w-7 h-7 bg-[#1A1A2A] hover:bg-brand rounded-full flex items-center
-                             justify-center text-xs text-white transition-colors"
-                  title={isAuthenticated ? "Save to Library" : "Sign up to save"}>
-            🔖
-          </button>
-          <button onClick={handleFavorite}
-                  className="w-7 h-7 bg-[#1A1A2A] hover:bg-red-700 rounded-full flex items-center
-                             justify-center text-xs text-white transition-colors"
-                  title={isAuthenticated ? "Add to Favourites" : "Sign up to favourite"}>
-            ♡
-          </button>
-
-          {/* Auth prompt */}
-          {prompt && (
-            <div onClick={e => e.preventDefault()}
-                 className="absolute right-9 top-0 w-44 bg-[#1A1A2A] border border-[#2A2A3A] text-white
-                            text-xs rounded-xl p-3 z-50 animate-fade-in">
-              <p className="font-semibold mb-1 leading-snug">
-                {prompt === "save" ? "Save books to your library" : "Favourite books you love"}
-              </p>
-              <p className="text-gray-500 mb-2 leading-snug">Create a free account to get started.</p>
-              <button onClick={e => { e.preventDefault(); navigate("/register") }}
-                      className="w-full py-1.5 bg-brand text-white rounded-lg font-semibold
-                                 hover:bg-indigo-500 transition text-xs">
-                Create account
-              </button>
-              <button onClick={e => { e.preventDefault(); navigate("/login") }}
-                      className="w-full py-1 text-gray-500 hover:text-white transition text-xs mt-1">
-                Already have one? Log in
-              </button>
-            </div>
-          )}
-        </div>
       </Link>
+
+      {/* Save / Fav buttons — positioned on the card (not inside the clipped Link) */}
+      <div className="absolute top-2 right-2 flex flex-col gap-1.5 z-20" ref={promptRef}>
+        <button onClick={handleSave}
+                className="w-7 h-7 bg-[#1A1A2A] hover:bg-brand rounded-full flex items-center
+                           justify-center text-xs text-white transition-colors shadow-md"
+                title={isAuthenticated ? "Save to Library" : "Sign up to save"}>
+          🔖
+        </button>
+        <button onClick={handleFavorite}
+                className="w-7 h-7 bg-[#1A1A2A] hover:bg-red-700 rounded-full flex items-center
+                           justify-center text-xs text-white transition-colors shadow-md"
+                title={isAuthenticated ? "Add to Favourites" : "Sign up to favourite"}>
+          ♡
+        </button>
+
+        {/* Auth prompt — now fully visible, not clipped */}
+        {prompt && (
+          <div onClick={e => e.preventDefault()}
+               className="absolute right-9 top-0 w-52 bg-[#0D0D16] border border-[#3A3A5A]
+                          text-white text-xs rounded-xl p-4 z-30 shadow-2xl animate-fade-in">
+            <p className="font-bold text-sm text-white mb-1 leading-snug">
+              {prompt === "save" ? "Save books to your library" : "Favourite books you love"}
+            </p>
+            <p className="text-gray-400 mb-3 leading-relaxed text-[11px]">
+              Create a free account to get started.
+            </p>
+            <button
+              onClick={e => { e.preventDefault(); navigate("/register") }}
+              className="w-full py-2 bg-brand text-white rounded-lg font-semibold
+                         hover:bg-indigo-500 transition text-xs mb-1.5">
+              Create account
+            </button>
+            <button
+              onClick={e => { e.preventDefault(); navigate("/login") }}
+              className="w-full py-1.5 border border-[#2A2A3A] text-gray-300 hover:text-white
+                         hover:border-[#4A4A6A] rounded-lg transition text-[11px]">
+              Already have one? Log in
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Meta */}
       <div className="p-3 flex flex-col flex-1">
