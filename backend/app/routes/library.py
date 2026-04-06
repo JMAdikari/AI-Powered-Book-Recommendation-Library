@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..extensions import db
 from ..models import Book, UserBook
+from ..services import recommender
 
 library_bp = Blueprint("library", __name__)
 
@@ -94,4 +95,14 @@ def update_status(user_book_id):
 
     user_book.status = status
     db.session.commit()
-    return jsonify({"message": "Status updated", "status": status}), 200
+
+    # Step 24 — Progress-Triggered Recommendation Refresh
+    # When a book is completed, recs are re-scored on the next dashboard visit
+    # (get_recommendations() runs fresh each time). Signal this to the frontend.
+    recs_refreshed = status == "completed"
+
+    return jsonify({
+        "message":      "Status updated",
+        "status":       status,
+        "recs_refreshed": recs_refreshed,
+    }), 200

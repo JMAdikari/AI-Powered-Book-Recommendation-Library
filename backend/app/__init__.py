@@ -30,13 +30,15 @@ def create_app():
     from .routes.books           import books_bp
     from .routes.library         import library_bp
     from .routes.recommendations import rec_bp
+    from .routes.progress        import progress_bp
     from .routes.admin           import admin_bp
 
-    app.register_blueprint(auth_bp,    url_prefix="/api/auth")
-    app.register_blueprint(books_bp,   url_prefix="/api/books")
-    app.register_blueprint(library_bp, url_prefix="/api/library")
-    app.register_blueprint(rec_bp,     url_prefix="/api/recommendations")
-    app.register_blueprint(admin_bp,   url_prefix="/api/admin")
+    app.register_blueprint(auth_bp,      url_prefix="/api/auth")
+    app.register_blueprint(books_bp,     url_prefix="/api/books")
+    app.register_blueprint(library_bp,   url_prefix="/api/library")
+    app.register_blueprint(rec_bp,       url_prefix="/api/recommendations")
+    app.register_blueprint(progress_bp,  url_prefix="/api/progress")
+    app.register_blueprint(admin_bp,     url_prefix="/api/admin")
 
     # Health check (inline — no separate blueprint needed)
     @app.route("/api/health")

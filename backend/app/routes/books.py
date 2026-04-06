@@ -1,8 +1,9 @@
 import urllib.parse
 from flask import Blueprint, request, jsonify
 from datetime import datetime, timedelta
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 from ..extensions import db
-from ..models import Book, BookContent
+from ..models import Book, BookContent, UserBook, ReadingProgress
 from ..services import open_library      as ol_service
 from ..services import google_books      as gb_service
 from ..services import gutenberg         as gut_service
@@ -263,6 +264,25 @@ def get_content(external_id):
         page           = max(1, min(int(request.args.get("page", 1)), total_pages))
         start          = (page - 1) * chars_per_page
         end            = start + chars_per_page
+
+        # ── Track reading progress if authenticated ──────────────────────────
+        try:
+            verify_jwt_in_request(optional=True)
+            user_id = get_jwt_identity()
+            if user_id:
+                user_id  = int(user_id)
+                ub = UserBook.query.filter_by(user_id=user_id, book_id=book.id).first()
+                if ub:
+                    prog = ub.progress
+                    if not prog:
+                        prog = ReadingProgress(user_book_id=ub.id)
+                        db.session.add(prog)
+                    prog.current_page = page
+                    prog.total_pages  = total_pages
+                    prog.last_read_at = datetime.utcnow()
+                    db.session.commit()
+        except Exception:
+            pass  # progress tracking is best-effort — never block reads
 
         return jsonify({
             "text":        raw_text[start:end],

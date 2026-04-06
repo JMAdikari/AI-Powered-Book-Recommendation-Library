@@ -149,6 +149,57 @@ def get_profile():
     }), 200
 
 
+# ── PUT /api/auth/profile ────────────────────────────────────────────────────
+@auth_bp.route("/profile", methods=["PUT"])
+@jwt_required()
+def update_profile():
+    user_id = int(get_jwt_identity())
+    user    = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    data     = request.get_json()
+    username = data.get("username", "").strip()
+    email    = data.get("email", "").strip().lower()
+
+    if username and username != user.username:
+        if User.query.filter(User.username == username, User.id != user_id).first():
+            return jsonify({"error": "Username already taken"}), 409
+        user.username = username
+
+    if email and email != user.email:
+        if User.query.filter(User.email == email, User.id != user_id).first():
+            return jsonify({"error": "Email already registered"}), 409
+        user.email = email
+
+    db.session.commit()
+    return jsonify({"message": "Profile updated", "user": user.to_dict()}), 200
+
+
+# ── PUT /api/auth/password ───────────────────────────────────────────────────
+@auth_bp.route("/password", methods=["PUT"])
+@jwt_required()
+def change_password():
+    user_id = int(get_jwt_identity())
+    user    = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    data             = request.get_json()
+    current_password = data.get("current_password", "")
+    new_password     = data.get("new_password", "")
+
+    if not bcrypt.check_password_hash(user.password_hash, current_password):
+        return jsonify({"error": "Current password is incorrect"}), 400
+
+    if len(new_password) < 8:
+        return jsonify({"error": "New password must be at least 8 characters"}), 400
+
+    user.password_hash = bcrypt.generate_password_hash(new_password, rounds=12).decode("utf-8")
+    db.session.commit()
+    return jsonify({"message": "Password changed successfully"}), 200
+
+
 # ── GET /api/auth/stats ──────────────────────────────────────────────────────
 @auth_bp.route("/stats", methods=["GET"])
 @jwt_required()
