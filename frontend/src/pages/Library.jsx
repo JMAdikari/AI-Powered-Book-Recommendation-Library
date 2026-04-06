@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { libraryService } from "../services/libraryService"
+import { recommendationService } from "../services/recommendationService"
 import EmptyState from "../components/ui/EmptyState"
 import { SkeletonCard } from "../components/ui/Skeleton"
 
@@ -62,6 +63,17 @@ export default function Library({ showToast }) {
         b.id === userBookId ? { ...b, status: newStatus } : b
       ))
       showToast?.(`Marked as ${newStatus}`, "success")
+
+      // Step 24 — auto-refresh recommendations when a book is completed
+      if (newStatus === "completed") {
+        showToast?.("Updating your recommendations…", "info")
+        try {
+          await recommendationService.refresh()
+          showToast?.("Recommendations updated!", "success")
+        } catch {
+          // non-critical — recs will update on next Dashboard visit
+        }
+      }
     } catch {
       showToast?.("Failed to update status", "error")
     }
