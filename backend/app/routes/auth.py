@@ -33,7 +33,7 @@ def register():
     db.session.add(user)
     db.session.commit()
 
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"access_token": access_token, "user": user.to_dict()}), 201
 
 
@@ -48,7 +48,7 @@ def login():
     if not user or not bcrypt.check_password_hash(user.password_hash, password):
         return jsonify({"error": "Invalid email or password"}), 401
 
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify({"access_token": access_token, "user": user.to_dict()}), 200
 
 
@@ -56,7 +56,7 @@ def login():
 @auth_bp.route("/me", methods=["GET"])
 @jwt_required()
 def me():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user    = User.query.get(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -75,7 +75,7 @@ def logout():
 @auth_bp.route("/preferences", methods=["POST"])
 @jwt_required()
 def create_preferences():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data    = request.get_json()
 
     if UserPreference.query.filter_by(user_id=user_id).first():
@@ -96,7 +96,7 @@ def create_preferences():
 @auth_bp.route("/preferences", methods=["PUT"])
 @jwt_required()
 def update_preferences():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     data    = request.get_json()
     pref    = UserPreference.query.filter_by(user_id=user_id).first()
 
@@ -119,7 +119,7 @@ def update_preferences():
 @auth_bp.route("/preferences", methods=["GET"])
 @jwt_required()
 def get_preferences():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     pref    = UserPreference.query.filter_by(user_id=user_id).first()
     if not pref:
         return jsonify({"preference": None}), 200
@@ -134,7 +134,7 @@ def get_preferences():
 @auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
 def get_profile():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     user    = User.query.get(user_id)
     if not user:
         return jsonify({"error": "User not found"}), 404
@@ -149,11 +149,62 @@ def get_profile():
     }), 200
 
 
+# ── PUT /api/auth/profile ────────────────────────────────────────────────────
+@auth_bp.route("/profile", methods=["PUT"])
+@jwt_required()
+def update_profile():
+    user_id = int(get_jwt_identity())
+    user    = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    data     = request.get_json()
+    username = data.get("username", "").strip()
+    email    = data.get("email", "").strip().lower()
+
+    if username and username != user.username:
+        if User.query.filter(User.username == username, User.id != user_id).first():
+            return jsonify({"error": "Username already taken"}), 409
+        user.username = username
+
+    if email and email != user.email:
+        if User.query.filter(User.email == email, User.id != user_id).first():
+            return jsonify({"error": "Email already registered"}), 409
+        user.email = email
+
+    db.session.commit()
+    return jsonify({"message": "Profile updated", "user": user.to_dict()}), 200
+
+
+# ── PUT /api/auth/password ───────────────────────────────────────────────────
+@auth_bp.route("/password", methods=["PUT"])
+@jwt_required()
+def change_password():
+    user_id = int(get_jwt_identity())
+    user    = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    data             = request.get_json()
+    current_password = data.get("current_password", "")
+    new_password     = data.get("new_password", "")
+
+    if not bcrypt.check_password_hash(user.password_hash, current_password):
+        return jsonify({"error": "Current password is incorrect"}), 400
+
+    if len(new_password) < 8:
+        return jsonify({"error": "New password must be at least 8 characters"}), 400
+
+    user.password_hash = bcrypt.generate_password_hash(new_password, rounds=12).decode("utf-8")
+    db.session.commit()
+    return jsonify({"message": "Password changed successfully"}), 200
+
+
 # ── GET /api/auth/stats ──────────────────────────────────────────────────────
 @auth_bp.route("/stats", methods=["GET"])
 @jwt_required()
 def get_stats():
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
     total_saved     = UserBook.query.filter_by(user_id=user_id).count()
     total_completed = UserBook.query.filter_by(user_id=user_id, status="completed").count()

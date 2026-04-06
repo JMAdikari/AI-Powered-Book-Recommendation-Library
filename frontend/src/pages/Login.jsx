@@ -27,35 +27,68 @@ export default function Login({ showToast }) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-sm p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Sign in to BookAI</h1>
-        {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email" placeholder="Email"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand"
-            required
-          />
-          <input
-            type="password" placeholder="Password"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand"
-            required
-          />
-          <button
-            type="submit" disabled={loading}
-            className="w-full bg-brand text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
-          >
-            {loading ? "Signing in…" : "Sign In"}
-          </button>
-        </form>
-        <p className="text-sm text-gray-600 mt-4 text-center">
-          No account? <Link to="/register" className="text-brand hover:underline">Register</Link>
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-[#0A0A10] px-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <div className="w-9 h-9 bg-brand rounded-xl flex items-center justify-center text-white text-sm font-bold">B</div>
+          <span className="text-xl font-bold text-white">BookAI</span>
+        </div>
+
+        <div className="bg-[#13131F] rounded-2xl border border-[#1E1E30] p-8">
+          <h1 className="text-2xl font-bold text-white mb-1">Welcome back</h1>
+          <p className="text-sm text-gray-500 mb-6">Sign in to your BookAI account</p>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-950 border border-red-900 text-red-400 text-sm rounded-xl">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1.5">Email</label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full border border-[#2A2A3A] rounded-xl px-4 py-2.5 text-sm
+                           bg-[#0D0D16] text-white placeholder-gray-600
+                           focus:outline-none focus:ring-2 focus:ring-brand transition"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1.5">Password</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+                className="w-full border border-[#2A2A3A] rounded-xl px-4 py-2.5 text-sm
+                           bg-[#0D0D16] text-white placeholder-gray-600
+                           focus:outline-none focus:ring-2 focus:ring-brand transition"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-brand text-white py-2.5 rounded-xl font-semibold text-sm
+                         hover:bg-indigo-500 transition disabled:opacity-50 mt-2"
+            >
+              {loading ? "Signing in…" : "Sign In"}
+            </button>
+          </form>
+
+          <p className="text-sm text-gray-600 mt-5 text-center">
+            No account?{" "}
+            <Link to="/register" className="text-brand hover:text-indigo-400 font-medium transition">
+              Create one free
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )

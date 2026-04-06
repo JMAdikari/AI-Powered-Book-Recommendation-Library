@@ -26,9 +26,9 @@ export default function App() {
         <Routes>
           {/* Public */}
           <Route path="/"          element={<Home />} />
-          <Route path="/search"    element={<Search />} />
-          <Route path="/books/:id" element={<BookDetail />} />
-          <Route path="/reader/:id" element={<Reader />} />
+          <Route path="/search"    element={<Search    showToast={showToast} />} />
+          <Route path="/books/:id" element={<BookDetail showToast={showToast} />} />
+          <Route path="/reader/:id" element={<Reader showToast={showToast} />} />
           <Route path="/login"     element={<Login    showToast={showToast} />} />
           <Route path="/register"  element={<Register showToast={showToast} />} />
 
@@ -40,7 +40,7 @@ export default function App() {
             <ProtectedRoute><Dashboard /></ProtectedRoute>
           } />
           <Route path="/library" element={
-            <ProtectedRoute><Library /></ProtectedRoute>
+            <ProtectedRoute><Library showToast={showToast} /></ProtectedRoute>
           } />
           <Route path="/profile" element={
             <ProtectedRoute><Profile showToast={showToast} /></ProtectedRoute>

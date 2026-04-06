@@ -29,8 +29,11 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  const refreshUser = () =>
+    getMe().then(res => setUser(res.data.user)).catch(() => {})
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated: !!user, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, refreshUser, isAuthenticated: !!user, loading }}>
       {children}
     </AuthContext.Provider>
   )
