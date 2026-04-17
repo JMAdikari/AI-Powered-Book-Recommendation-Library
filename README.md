@@ -26,6 +26,28 @@ A full-stack web application that combines a personal reading library with an AI
 - **Reading Dashboard** — Weekly stats, reading streak tracker, and 7-day activity calendar
 - **User Profile** — Edit account details, change password, manage genre preferences
 
+## 🖼️ User interface
+
+
+Home page 
+
+<p align="center"> <img src="UI/home2.png" alt="comparison_blue_oversized_hoodie" width="600" height="400"/> </p>
+
+Book Read page
+
+<p align="center"> <img src="UI/read.png" alt="comparison_blue_oversized_hoodie" width="600" height="400"/> </p>
+
+Book buy page
+
+<p align="center"> <img src="UI/buy.png" alt="comparison_blue_oversized_hoodie" width="600" height="400"/> </p>
+
+Library page
+
+<p align="center"> <img src="UI/library.png" alt="comparison_blue_oversized_hoodie" width="600" height="400"/> </p>
+Dashboard page
+
+<p align="center"> <img src="UI/dashboard.png" alt="comparison_blue_oversized_hoodie" width="600" height="400"/> </p> 
+
 ### Content Availability
 | Badge | Meaning |
 |-------|---------|
